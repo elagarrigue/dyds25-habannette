@@ -1,6 +1,6 @@
 @file:Suppress("FunctionName")
 
-package edu.dyds.movies
+package edu.dyds.movies.presentation.detail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -25,8 +25,7 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import dydsproject.composeapp.generated.resources.*
 import edu.dyds.movies.domain.entity.Movie
-import edu.dyds.movies.presentation.detail.MoviesDetailViewModel
-import edu.dyds.movies.presentation.detail.MoviesDetailUiState
+import edu.dyds.movies.presentation.utils.*
 
 import org.jetbrains.compose.resources.stringResource
 
@@ -34,7 +33,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun DetailScreen(viewModel: MoviesDetailViewModel, id: Int, onBack: () -> Unit) {
 
-    val state by viewModel.movieDetailStateFlow.collectAsState(MoviesDetailViewModel.MovieDetailUiState())
+    val state by viewModel.movieDetailStateFlow.collectAsState(initial = MovieDetailUiState())
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 

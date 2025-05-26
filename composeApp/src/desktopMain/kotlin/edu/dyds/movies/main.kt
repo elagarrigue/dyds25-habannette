@@ -2,6 +2,8 @@ package edu.dyds.movies
 
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import edu.dyds.movies.presentation.App
+
 // Rama creada, comentario de prueba
 fun main() = application {
     Window(

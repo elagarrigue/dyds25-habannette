@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import edu.dyds.movies.MoviesDependencyInjector.getMoviesViewModel
+import edu.dyds.movies.MoviesDependencyInjector.getMoviesDetailViewModel
 
 private const val HOME = "home"
 
@@ -47,7 +48,7 @@ private fun NavGraphBuilder.detailDestination(navController: NavHostController) 
         val movieId = backstackEntry.arguments?.getInt(MOVIE_ID)
 
         movieId?.let {
-            DetailScreen(getMoviesViewModel(), it, onBack = { navController.popBackStack() })
+            DetailScreen(getMoviesDetailViewModel(), it, onBack = { navController.popBackStack() })
         }
     }
 }

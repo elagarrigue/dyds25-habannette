@@ -9,9 +9,11 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
-import edu.dyds.movies.data.MovieRepositoryImpl
+import edu.dyds.movies.data.local.MovieRepositoryImpl
 import edu.dyds.movies.domain.usecase.GetMoviesDetailsUseCase
 import edu.dyds.movies.domain.usecase.GetPopularMoviesUseCase
+import edu.dyds.movies.presentation.detail.MoviesDetailViewModel
+import edu.dyds.movies.presentation.home.MoviesViewModel
 
 private const val API_KEY = "d18da1b5da16397619c688b0263cd281"
 
@@ -51,6 +53,11 @@ object MoviesDependencyInjector {
 
     @Composable
     fun getMoviesViewModel(): MoviesViewModel {
-        return viewModel { MoviesViewModel(getPopularMoviesUseCase, getMoviesDetailsUseCase) }
+        return viewModel { MoviesViewModel(getPopularMoviesUseCase) }
+    }
+
+    @Composable
+    fun getMoviesDetailViewModel(): MoviesDetailViewModel {
+        return viewModel {MoviesDetailViewModel(getMoviesDetailsUseCase)}
     }
 }

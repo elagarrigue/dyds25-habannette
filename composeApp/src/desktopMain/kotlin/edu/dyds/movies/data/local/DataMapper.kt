@@ -2,7 +2,7 @@ package edu.dyds.movies.data.local // o data.mapper si preferís
 
 import edu.dyds.movies.domain.entity.Movie
 
-fun RemoteMovie.toDomain(): Movie = Movie(
+fun RemoteMovie.toDomainMovie(): Movie = Movie(
     id = id,
     title = title,
     overview = overview,

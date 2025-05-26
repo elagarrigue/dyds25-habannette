@@ -2,16 +2,12 @@ package edu.dyds.movies.presentation.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import edu.dyds.movies.domain.entity.Movie
-import edu.dyds.movies.domain.entity.QualifiedMovie
-import edu.dyds.movies.domain.entity.RemoteMovie
 import edu.dyds.movies.domain.usecase.GetMoviesDetailsUseCase
-import edu.dyds.movies.domain.usecase.GetPopularMoviesUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
-class MoviesViewModel(
+class MoviesDetailViewModel(
     private val getMoviesDetailsUseCase: GetMoviesDetailsUseCase
 ) : ViewModel() {
 

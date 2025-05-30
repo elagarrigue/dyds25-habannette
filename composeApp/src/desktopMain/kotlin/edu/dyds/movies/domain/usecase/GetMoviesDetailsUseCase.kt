@@ -1,7 +1,7 @@
 package edu.dyds.movies.domain.usecase
 
 import edu.dyds.movies.domain.repository.MoviesRepository
-import edu.dyds.movies.data.local.toDomainMovie
+import edu.dyds.movies.data.toDomainMovie
 
 class GetMoviesDetailsUseCase (
     private val repository: MoviesRepository

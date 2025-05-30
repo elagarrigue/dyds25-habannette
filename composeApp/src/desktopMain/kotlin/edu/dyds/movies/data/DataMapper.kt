@@ -1,4 +1,4 @@
-package edu.dyds.movies.data.local // o data.mapper si preferís
+package edu.dyds.movies.data // o data.mapper si preferís
 
 import edu.dyds.movies.domain.entity.Movie
 

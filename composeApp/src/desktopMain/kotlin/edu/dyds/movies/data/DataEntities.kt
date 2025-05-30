@@ -1,4 +1,4 @@
-package edu.dyds.movies.data.local
+package edu.dyds.movies.data
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

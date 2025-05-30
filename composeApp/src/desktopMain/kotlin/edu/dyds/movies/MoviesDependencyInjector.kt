@@ -9,11 +9,15 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
-import edu.dyds.movies.data.local.MovieRepositoryImpl
+import edu.dyds.movies.data.MovieRepositoryImpl
 import edu.dyds.movies.domain.usecase.GetMoviesDetailsUseCase
 import edu.dyds.movies.domain.usecase.GetPopularMoviesUseCase
 import edu.dyds.movies.presentation.detail.MoviesDetailViewModel
 import edu.dyds.movies.presentation.home.MoviesViewModel
+import edu.dyds.movies.data.external.ExternalRepository
+import edu.dyds.movies.data.local.LocalRepository
+import edu.dyds.movies.data.external.ExternalRepositoryImpl
+import edu.dyds.movies.data.local.LocalRepositoryImpl
 
 private const val API_KEY = "d18da1b5da16397619c688b0263cd281"
 
@@ -38,8 +42,19 @@ object MoviesDependencyInjector {
             }
         }
 
-    private val movieRepository: MoviesRepository by lazy{
-        MovieRepositoryImpl(tmdbHttpClient)
+    private val localRepository: LocalRepository by lazy {
+        LocalRepositoryImpl()
+    }
+
+    private val externalRepository: ExternalRepository by lazy {
+        ExternalRepositoryImpl(tmdbHttpClient)
+    }
+
+    val movieRepository: MoviesRepository by lazy {
+        MovieRepositoryImpl(
+            localRepository  = localRepository,
+            externalRepository = externalRepository
+        )
     }
 
     private val getPopularMoviesUseCase: GetPopularMoviesUseCase by lazy{

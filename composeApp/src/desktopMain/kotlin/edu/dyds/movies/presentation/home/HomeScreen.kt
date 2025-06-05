@@ -24,6 +24,9 @@ import edu.dyds.movies.domain.entity.Movie
 import edu.dyds.movies.domain.entity.QualifiedMovie
 import edu.dyds.movies.presentation.utils.*
 import org.jetbrains.compose.resources.stringResource
+import androidx.compose.foundation.Image
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.painterResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -137,8 +140,8 @@ private fun BadMovieItem(movie: Movie) {
         onCloseRequest = { dialogState = false },
         visible = dialogState
     ) {
-        AsyncImage(
-            model = this::class.java.getResource("/images/too_bad.png")?.toString(),
+        Image(
+            painter = painterResource("images/too_bad.png"),
             contentDescription = null,
             contentScale = ContentScale.Fit,
             modifier = Modifier

@@ -3,29 +3,30 @@ package edu.dyds.movies.data
 import edu.dyds.movies.data.external.ExternalRepository
 import edu.dyds.movies.data.local.LocalRepository
 import edu.dyds.movies.domain.repository.MoviesRepository
-import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.request.get
+import kotlin.collections.mutableListOf
 
 class MovieRepositoryImpl(
- //   private val httpClient: HttpClient,
     private val localRepository: LocalRepository,
     private val externalRepository: ExternalRepository
 ) : MoviesRepository {
 
     private val cacheMovies = mutableListOf<RemoteMovie>()
 
-    override suspend fun getPopularMovies(): List<RemoteMovie> {
-        return if (cacheMovies.isNotEmpty()) {
+    override suspend fun getPopularMovies(): MutableList<RemoteMovie> {
+        return try {
+            if (cacheMovies.isNotEmpty()) {
                 localRepository.getMovies(cacheMovies)
-        } else {
-            try {
-                externalRepository.getMovies(cacheMovies)
-            } catch (e: Exception) {
-                emptyList()
+            } else {
+                cacheMovies.clear()
+                cacheMovies.addAll(externalRepository.getMovies())
             }
+            cacheMovies
+        } catch (e: Exception) {
+            println("Error al hacer el fetch de las películas: ${e.message}")
+            mutableListOf()
         }
     }
+
 
 
     override suspend fun getMovieDetails(id: Int): RemoteMovie? =

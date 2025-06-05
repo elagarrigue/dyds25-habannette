@@ -8,19 +8,20 @@ import io.ktor.client.request.get
 
 class ExternalRepositoryImpl(private val httpClient: HttpClient): ExternalRepository {
 
-    override suspend fun getMovies(cache: MutableList<RemoteMovie>):  MutableList<RemoteMovie>{
+    override suspend fun getMovies(): List<RemoteMovie> {
         val result = getTMDBPopularMovies().results
-        cache.clear()
-        cache.addAll(result)
-        result
-        return cache
+        return result
     }
-    override suspend fun getMovieDetails(id: Int): RemoteMovie? =
-        try {
+
+    override suspend fun getMovieDetails(id: Int): RemoteMovie? {
+        return try {
             getTMDBMovieDetails(id)
         } catch (e: Exception) {
+            println("Error al traer las peliculas del repositorio externo : ${e.message}")
             null
         }
+    }
+
     private suspend fun getTMDBMovieDetails(id: Int): RemoteMovie? =
         httpClient.get("/3/movie/$id").body()
 

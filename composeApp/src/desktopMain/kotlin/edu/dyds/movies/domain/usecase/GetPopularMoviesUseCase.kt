@@ -6,12 +6,17 @@ import edu.dyds.movies.data.toDomainMovie
 import edu.dyds.movies.domain.repository.MoviesRepository
 private const val MIN_VOTE_AVERAGE = 6.0
 
-class GetPopularMoviesUseCase (
+interface GetPopularMoviesUseCase {
+    suspend fun getPopularMovies(): List<QualifiedMovie>
+
+}
+
+class GetPopularMoviesUseCaseImpl (
     private val repository: MoviesRepository
-){
+): GetPopularMoviesUseCase{
 
 
-    suspend fun getPopularMovies(): List<QualifiedMovie> {
+    override  suspend fun getPopularMovies(): List<QualifiedMovie> {
         return repository.getPopularMovies().sortAndMap()
     }
 

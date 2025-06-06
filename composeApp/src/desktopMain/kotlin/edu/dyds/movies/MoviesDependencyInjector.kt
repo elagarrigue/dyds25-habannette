@@ -18,6 +18,8 @@ import edu.dyds.movies.data.external.ExternalRepository
 import edu.dyds.movies.data.local.LocalRepository
 import edu.dyds.movies.data.external.ExternalRepositoryImpl
 import edu.dyds.movies.data.local.LocalRepositoryImpl
+import edu.dyds.movies.domain.usecase.GetMoviesDetailsUseCaseImpl
+import edu.dyds.movies.domain.usecase.GetPopularMoviesUseCaseImpl
 
 private const val API_KEY = "d18da1b5da16397619c688b0263cd281"
 
@@ -42,28 +44,15 @@ object MoviesDependencyInjector {
             }
         }
 
-    private val localRepository: LocalRepository by lazy {
-        LocalRepositoryImpl()
-    }
+    private val localRepository: LocalRepository = LocalRepositoryImpl()
+    private val externalRepository: ExternalRepository = ExternalRepositoryImpl(tmdbHttpClient)
+    val movieRepository: MoviesRepository = MovieRepositoryImpl(localRepository, externalRepository)
 
-    private val externalRepository: ExternalRepository by lazy {
-        ExternalRepositoryImpl(tmdbHttpClient)
-    }
+    private val getPopularMoviesUseCase: GetPopularMoviesUseCase =
+        GetPopularMoviesUseCaseImpl(movieRepository)
 
-    val movieRepository: MoviesRepository by lazy {
-        MovieRepositoryImpl(
-            localRepository  = localRepository,
-            externalRepository = externalRepository
-        )
-    }
-
-    private val getPopularMoviesUseCase: GetPopularMoviesUseCase by lazy{
-        GetPopularMoviesUseCase(movieRepository)
-    }
-
-    private val getMoviesDetailsUseCase: GetMoviesDetailsUseCase by lazy{
-        GetMoviesDetailsUseCase(movieRepository)
-    }
+    private val getMoviesDetailsUseCase: GetMoviesDetailsUseCase =
+        GetMoviesDetailsUseCaseImpl(movieRepository)
 
 
     @Composable

@@ -1,4 +1,4 @@
-package edu.dyds.movies
+package edu.dyds.movies.di
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel

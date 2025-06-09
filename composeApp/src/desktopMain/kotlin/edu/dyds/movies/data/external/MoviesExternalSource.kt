@@ -2,7 +2,7 @@ package edu.dyds.movies.data.external
 
 import edu.dyds.movies.data.RemoteMovie
 
-interface ExternalRepository {
+interface MoviesExternalSource {
         suspend fun getMovies(): List<RemoteMovie>
         suspend fun getMovieDetails(id: Int): RemoteMovie?
 }

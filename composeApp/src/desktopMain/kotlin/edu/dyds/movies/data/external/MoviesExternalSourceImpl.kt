@@ -6,7 +6,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 
-class ExternalRepositoryImpl(private val httpClient: HttpClient): ExternalRepository {
+class MoviesExternalSourceImpl(private val httpClient: HttpClient): MoviesExternalSource {
 
     override suspend fun getMovies(): List<RemoteMovie> {
         val result = getTMDBPopularMovies().results

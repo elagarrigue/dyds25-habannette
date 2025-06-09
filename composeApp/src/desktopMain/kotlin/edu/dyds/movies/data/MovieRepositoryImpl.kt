@@ -1,36 +1,40 @@
 package edu.dyds.movies.data
 
-import edu.dyds.movies.data.external.ExternalRepository
-import edu.dyds.movies.data.local.LocalRepository
+import edu.dyds.movies.data.external.MoviesExternalSource
+import edu.dyds.movies.data.local.MoviesLocalSource
 import edu.dyds.movies.domain.repository.MoviesRepository
-import kotlin.collections.mutableListOf
+import edu.dyds.movies.domain.entity.Movie
+
 
 class MovieRepositoryImpl(
-    private val localRepository: LocalRepository,
-    private val externalRepository: ExternalRepository
+    private val moviesLocalSource: MoviesLocalSource,
+    private val moviesExternalSource: MoviesExternalSource
 ) : MoviesRepository {
 
-    private val cacheMovies = mutableListOf<RemoteMovie>()
 
-    override suspend fun getPopularMovies(): List<RemoteMovie> {
-        return try {
-            if (cacheMovies.isNotEmpty()) {
-                localRepository.getMovies(cacheMovies)
-            } else {
-                cacheMovies.clear()
-                cacheMovies.addAll(externalRepository.getMovies())
-            }
-            cacheMovies
+    override suspend fun getPopularMovies(): List<Movie> {
+        try{
+        if (moviesLocalSource.isEmpty()) {
+            val remoteMovies = moviesExternalSource.getMovies()
+            moviesLocalSource.saveMovies(remoteMovies)
+        }
+        return moviesLocalSource.getMovies().map {
+            it.toDomainMovie()
+        }
         } catch (e: Exception) {
             println("Error al hacer el fetch de las películas: ${e.message}")
-            mutableListOf()
+            return emptyList()
         }
     }
 
-
-
-    override suspend fun getMovieDetails(id: Int): RemoteMovie? =
-        externalRepository.getMovieDetails(id)
+    override suspend fun getMovieDetails(id: Int): Movie? {
+        return try {
+            moviesExternalSource.getMovieDetails(id)?.toDomainMovie()
+        } catch (e: Exception) {
+            println("Error al obtener detalles de la película: ${e.message}")
+            null
+        }
+    }
 
 
 }

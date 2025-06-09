@@ -1,5 +1,6 @@
 package edu.dyds.movies.data
 
+import edu.dyds.movies.domain.entity.Movie
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -14,8 +15,22 @@ data class RemoteMovie(
     @SerialName("original_title") val originalTitle: String,
     @SerialName("original_language") val originalLanguage: String,
     val popularity: Double,
-    @SerialName("vote_average") val voteAverage: Double
-)
+    @SerialName("vote_average") val voteAverage: Double,
+) {
+    fun toDomainMovie(): Movie = Movie(
+        id = id,
+        title = title,
+        overview = overview,
+        releaseDate = releaseDate,
+        poster = "https://image.tmdb.org/t/p/w185$posterPath",
+        backdrop = backdropPath?.let { "https://image.tmdb.org/t/p/w780$it" },
+        originalTitle = originalTitle,
+        originalLanguage = originalLanguage,
+        popularity = popularity,
+        voteAverage = voteAverage
+    )
+}
+
 
 @Serializable
 data class RemoteResult(
@@ -24,3 +39,5 @@ data class RemoteResult(
     @SerialName("total_pages") val totalPages: Int,
     @SerialName("total_results") val totalResults: Int
 )
+
+

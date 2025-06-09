@@ -14,10 +14,10 @@ import edu.dyds.movies.domain.usecase.GetMoviesDetailsUseCase
 import edu.dyds.movies.domain.usecase.GetPopularMoviesUseCase
 import edu.dyds.movies.presentation.detail.MoviesDetailViewModel
 import edu.dyds.movies.presentation.home.MoviesViewModel
-import edu.dyds.movies.data.external.ExternalRepository
-import edu.dyds.movies.data.local.LocalRepository
-import edu.dyds.movies.data.external.ExternalRepositoryImpl
-import edu.dyds.movies.data.local.LocalRepositoryImpl
+import edu.dyds.movies.data.external.MoviesExternalSource
+import edu.dyds.movies.data.local.MoviesLocalSource
+import edu.dyds.movies.data.external.MoviesExternalSourceImpl
+import edu.dyds.movies.data.local.MoviesLocalSourceImpl
 import edu.dyds.movies.domain.usecase.GetMoviesDetailsUseCaseImpl
 import edu.dyds.movies.domain.usecase.GetPopularMoviesUseCaseImpl
 
@@ -44,8 +44,8 @@ object MoviesDependencyInjector {
             }
         }
 
-    private val localRepository: LocalRepository = LocalRepositoryImpl()
-    private val externalRepository: ExternalRepository = ExternalRepositoryImpl(tmdbHttpClient)
+    private val localRepository: MoviesLocalSource = MoviesLocalSourceImpl()
+    private val externalRepository: MoviesExternalSource = MoviesExternalSourceImpl(tmdbHttpClient)
     val movieRepository: MoviesRepository = MovieRepositoryImpl(localRepository, externalRepository)
 
     private val getPopularMoviesUseCase: GetPopularMoviesUseCase =

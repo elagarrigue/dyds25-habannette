@@ -15,4 +15,5 @@ class GetMoviesDetailsUseCaseImpl (
 
     override suspend fun getMovieDetails(id: Int) =
         repository.getMovieDetails(id)
+
 }

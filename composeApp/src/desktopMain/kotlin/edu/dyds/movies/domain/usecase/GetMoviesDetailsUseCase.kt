@@ -14,9 +14,5 @@ class GetMoviesDetailsUseCaseImpl (
 ) : GetMoviesDetailsUseCase {
 
     override suspend fun getMovieDetails(id: Int) =
-        try {
-            repository.getMovieDetails(id)?.toDomainMovie()
-        } catch (e: Exception) {
-            null
-        }
+        repository.getMovieDetails(id)?.toDomainMovie()
 }

@@ -1,8 +1,7 @@
 package edu.dyds.movies.domain.usecase
 
 import edu.dyds.movies.domain.entity.QualifiedMovie
-import edu.dyds.movies.data.RemoteMovie
-import edu.dyds.movies.data.toDomainMovie
+import edu.dyds.movies.domain.entity.Movie
 import edu.dyds.movies.domain.repository.MoviesRepository
 private const val MIN_VOTE_AVERAGE = 6.0
 
@@ -17,16 +16,14 @@ class GetPopularMoviesUseCaseImpl (
 
 
     override  suspend fun getPopularMovies(): List<QualifiedMovie> {
-        return repository.getPopularMovies().sortAndMap()
+        return repository.getPopularMovies().mapToQualifiedMovie()
     }
 
-    private fun List<RemoteMovie>.sortAndMap(): List<QualifiedMovie> {
-        return this
-            .sortedByDescending { it.voteAverage }
-            .map {
+    private fun List<Movie>.mapToQualifiedMovie(): List<QualifiedMovie> {
+        return this.map { movie ->
                 QualifiedMovie(
-                    movie = it.toDomainMovie(),
-                    isGoodMovie = it.voteAverage >= MIN_VOTE_AVERAGE
+                    movie       = movie,
+                    isGoodMovie = movie.voteAverage >= MIN_VOTE_AVERAGE
                 )
             }
     }

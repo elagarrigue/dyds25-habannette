@@ -13,8 +13,6 @@ class MoviesViewModel(
     private val getPopularMoviesUseCase: GetPopularMoviesUseCase
 ) : ViewModel() {
 
-    private val cacheMovies: MutableList<RemoteMovie> = mutableListOf()
-
     private val moviesStateMutableStateFlow = MutableStateFlow(MoviesUiState())
 
 

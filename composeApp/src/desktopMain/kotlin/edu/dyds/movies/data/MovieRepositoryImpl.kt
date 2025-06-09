@@ -12,7 +12,7 @@ class MovieRepositoryImpl(
 
     private val cacheMovies = mutableListOf<RemoteMovie>()
 
-    override suspend fun getPopularMovies(): MutableList<RemoteMovie> {
+    override suspend fun getPopularMovies(): List<RemoteMovie> {
         return try {
             if (cacheMovies.isNotEmpty()) {
                 localRepository.getMovies(cacheMovies)

@@ -1,7 +1,6 @@
 package edu.dyds.movies.domain.usecase
 
 import edu.dyds.movies.domain.repository.MoviesRepository
-import edu.dyds.movies.data.toDomainMovie
 import edu.dyds.movies.domain.entity.Movie
 
 

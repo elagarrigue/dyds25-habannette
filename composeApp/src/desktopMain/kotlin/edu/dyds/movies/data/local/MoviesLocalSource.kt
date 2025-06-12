@@ -1,9 +1,10 @@
 package edu.dyds.movies.data.local
 
-import edu.dyds.movies.data.RemoteMovie
+
+import edu.dyds.movies.domain.entity.Movie
 
 interface MoviesLocalSource {
-    suspend fun getMovies():  MutableList<RemoteMovie>
+    suspend fun getMovies():  MutableList<Movie>
     suspend fun isEmpty():Boolean
-    suspend fun saveMovies(movies: List<RemoteMovie>)
+    suspend fun saveMovies(movies: List<Movie>)
 }

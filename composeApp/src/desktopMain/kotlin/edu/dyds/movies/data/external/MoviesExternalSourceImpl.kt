@@ -1,21 +1,22 @@
 package edu.dyds.movies.data.external
 
-import edu.dyds.movies.data.RemoteMovie
-import edu.dyds.movies.data.RemoteResult
+import edu.dyds.movies.domain.entity.Movie
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 
 class MoviesExternalSourceImpl(private val httpClient: HttpClient): MoviesExternalSource {
 
-    override suspend fun getMovies(): List<RemoteMovie> {
-        val result = getTMDBPopularMovies().results
+    override suspend fun getMovies(): List<Movie> {
+        val result = getTMDBPopularMovies().results.map {
+            it.toDomainMovie()
+        }
         return result
     }
 
-    override suspend fun getMovieDetails(id: Int): RemoteMovie? {
+    override suspend fun getMovieDetails(id: Int): Movie? {
         return try {
-            getTMDBMovieDetails(id)
+            getTMDBMovieDetails(id)?.toDomainMovie()
         } catch (e: Exception) {
             println("Error al traer las peliculas del repositorio externo : ${e.message}")
             null

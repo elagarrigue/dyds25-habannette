@@ -18,9 +18,7 @@ class MovieRepositoryImpl(
             val remoteMovies = moviesExternalSource.getMovies()
             moviesLocalSource.saveMovies(remoteMovies)
         }
-        return moviesLocalSource.getMovies().map {
-            it.toDomainMovie()
-        }
+        return moviesLocalSource.getMovies()
         } catch (e: Exception) {
             println("Error al hacer el fetch de las películas: ${e.message}")
             return emptyList()
@@ -29,7 +27,7 @@ class MovieRepositoryImpl(
 
     override suspend fun getMovieDetails(id: Int): Movie? {
         return try {
-            moviesExternalSource.getMovieDetails(id)?.toDomainMovie()
+            moviesExternalSource.getMovieDetails(id)
         } catch (e: Exception) {
             println("Error al obtener detalles de la película: ${e.message}")
             null

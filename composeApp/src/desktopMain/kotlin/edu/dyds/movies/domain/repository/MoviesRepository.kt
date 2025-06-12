@@ -1,6 +1,5 @@
 package edu.dyds.movies.domain.repository
 
-import edu.dyds.movies.data.RemoteMovie
 import edu.dyds.movies.domain.entity.Movie
 
 interface MoviesRepository {

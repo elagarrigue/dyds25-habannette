@@ -15,12 +15,7 @@ class MoviesExternalSourceImpl(private val httpClient: HttpClient): MoviesExtern
     }
 
     override suspend fun getMovieDetails(id: Int): Movie? {
-        return try {
-            getTMDBMovieDetails(id)?.toDomainMovie()
-        } catch (e: Exception) {
-            println("Error al traer las peliculas del repositorio externo : ${e.message}")
-            null
-        }
+            return getTMDBMovieDetails(id)?.toDomainMovie()
     }
 
     private suspend fun getTMDBMovieDetails(id: Int): RemoteMovie? =

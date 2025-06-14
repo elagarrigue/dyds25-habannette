@@ -2,8 +2,8 @@ package edu.dyds.movies.data
 
 import edu.dyds.movies.data.external.MoviesExternalSource
 import edu.dyds.movies.data.local.MoviesLocalSource
-import edu.dyds.movies.domain.repository.MoviesRepository
 import edu.dyds.movies.domain.entity.Movie
+import edu.dyds.movies.domain.repository.MoviesRepository
 
 
 class MovieRepositoryImpl(
@@ -13,14 +13,14 @@ class MovieRepositoryImpl(
 
 
     override suspend fun getPopularMovies(): List<Movie> {
-        try{
-        if (moviesLocalSource.isEmpty()) {
-            val remoteMovies = moviesExternalSource.getMovies()
-            moviesLocalSource.saveMovies(remoteMovies)
-        }
-        return moviesLocalSource.getMovies()
+        try {
+            if (moviesLocalSource.isEmpty()) {
+                val remoteMovies = moviesExternalSource.getMovies()
+                moviesLocalSource.saveMovies(remoteMovies)
+            }
+            return moviesLocalSource.getMovies()
         } catch (e: Exception) {
-            println("Error al hacer el fetch de las películas: ${e.message}")
+            println("Error al hacer el fetch de las peliculas: ${e.message}")
             return emptyList()
         }
     }
@@ -29,7 +29,7 @@ class MovieRepositoryImpl(
         return try {
             moviesExternalSource.getMovieDetails(id)
         } catch (e: Exception) {
-            println("Error al obtener detalles de la película: ${e.message}")
+            println("Error al obtener detalles de la pelicula: ${e.message}")
             null
         }
     }

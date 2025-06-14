@@ -1,11 +1,11 @@
 package edu.dyds.movies.data.external
 
 import edu.dyds.movies.domain.entity.Movie
-import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.request.get
+import io.ktor.client.*
+import io.ktor.client.call.*
+import io.ktor.client.request.*
 
-class MoviesExternalSourceImpl(private val httpClient: HttpClient): MoviesExternalSource {
+class MoviesExternalSourceImpl(private val httpClient: HttpClient) : MoviesExternalSource {
 
     override suspend fun getMovies(): List<Movie> {
         val result = getTMDBPopularMovies().results.map {
@@ -15,7 +15,7 @@ class MoviesExternalSourceImpl(private val httpClient: HttpClient): MoviesExtern
     }
 
     override suspend fun getMovieDetails(id: Int): Movie? {
-            return getTMDBMovieDetails(id)?.toDomainMovie()
+        return getTMDBMovieDetails(id)?.toDomainMovie()
     }
 
     private suspend fun getTMDBMovieDetails(id: Int): RemoteMovie? =

@@ -9,7 +9,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class MoviesLocalSourceImplTest {
+class MoviesLocalSourceTest {
 
     private lateinit var localSource: MoviesLocalSource
 
@@ -89,3 +89,4 @@ class MoviesLocalSourceImplTest {
     }
 
 }
+

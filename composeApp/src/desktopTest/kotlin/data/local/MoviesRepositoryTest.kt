@@ -1,11 +1,10 @@
 import data.local.MoviesExternalSourceFake
 import edu.dyds.movies.data.MovieRepositoryImpl
 import edu.dyds.movies.domain.entity.Movie
-import edu.dyds.movies.data.external.MoviesExternalSource
 import kotlinx.coroutines.test.runTest
 import kotlin.test.*
 
-class MovieRepositoryImplTest {
+class MoviesRepositoryTest {
 
     private lateinit var movie1: Movie
     private lateinit var movie2: Movie
@@ -42,17 +41,12 @@ class MovieRepositoryImplTest {
 
     @Test
     fun `getPopularMovies retorna lista vacia si ocurre un error durante el fetch remoto`() = runTest {
-        val externalConExcepcionSimulada = object : MoviesExternalSource {
-            override suspend fun getMovies(): List<Movie> {
-                throw RuntimeException("fallo de red")
-            }
-
-            override suspend fun getMovieDetails(id: Int): Movie? {
-                throw RuntimeException("irrelevante")
-            }
-        }
-
-        val repo = MovieRepositoryImpl(MoviesLocalSourceFake(), externalConExcepcionSimulada)
+        val fakeLocal= MoviesLocalSourceFake()
+        val fakeExternal = MoviesExternalSourceFake(
+            movies = emptyList(),
+            exceptionGetMovies = true
+        )
+        val repo = MovieRepositoryImpl(fakeLocal, fakeExternal)
 
         val result = repo.getPopularMovies()
 
@@ -61,10 +55,12 @@ class MovieRepositoryImplTest {
 
     @Test
     fun `getMovieDetails retorna pelicula si existe en remoto`() = runTest {
+        val fakeLocal= MoviesLocalSourceFake()
         val external = MoviesExternalSourceFake(
             movieDetailsMap = mapOf(movie1.id to movie1)
         )
-        val repo = MovieRepositoryImpl(MoviesLocalSourceFake(), external)
+
+        val repo = MovieRepositoryImpl(fakeLocal, external)
 
         val result = repo.getMovieDetails(movie1.id)
 
@@ -73,16 +69,11 @@ class MovieRepositoryImplTest {
 
     @Test
     fun `getMovieDetails retorna null si ocurre error en remoto`() = runTest {
-        val externalConExcepcionSimulada = object : MoviesExternalSource {
-            override suspend fun getMovies(): List<Movie> {
-                throw RuntimeException("fallo de red")
-            }
-
-            override suspend fun getMovieDetails(id: Int): Movie? {
-                throw RuntimeException("irrelevante")
-            }
-        }
-        val repo = MovieRepositoryImpl(MoviesLocalSourceFake(), externalConExcepcionSimulada)
+        val fakeExternal= MoviesExternalSourceFake(
+            movieDetailsMap = emptyMap(),
+            exceptionGetMovieDetails = true
+        )
+        val repo = MovieRepositoryImpl(MoviesLocalSourceFake(), fakeExternal)
         val result = repo.getMovieDetails(0)
 
         assertEquals(null, result)

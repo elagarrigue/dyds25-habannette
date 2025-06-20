@@ -1,15 +1,32 @@
+package presentation.home
+
 import edu.dyds.movies.domain.entity.Movie
 import edu.dyds.movies.domain.entity.QualifiedMovie
 import edu.dyds.movies.domain.usecase.GetPopularMoviesUseCase
 import edu.dyds.movies.presentation.home.MoviesViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.*
+import org.junit.After
 import org.junit.Assert.*
+import org.junit.Before
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class MoviesViewModelTest {
+
+    private val testDispatcher = StandardTestDispatcher()
+
+    @Before
+    fun setUp() {
+        Dispatchers.setMain(testDispatcher)
+    }
+
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
+    }
 
     // Fakes
 
@@ -23,39 +40,37 @@ class MoviesViewModelTest {
 
     @Test
     fun `cuando se crea el ViewModel, el estado inicial no esta cargando y la lista de peliculas esta vacia`() {
-        // Arrange
         val viewModel = MoviesViewModel(FakeSuccessPopularUseCase(emptyList()))
+        val initial = (viewModel.moviesStateFlow as MutableStateFlow).value
 
-        // Act
-        val initial = (viewModel.moviesStateFlow as kotlinx.coroutines.flow.MutableStateFlow).value
-
-        // Assert
         assertFalse(initial.isLoading)
         assertTrue(initial.movies.isEmpty())
     }
 
     @Test
-    fun `cuando getAllMovies es exitoso, el estado contiene la lista de peliculas y no esta cargando`() = runTest {
-        // Arrange
+    fun `cuando getAllMovies es exitoso, el estado contiene 5 peliculas y no esta cargando`() = runTest {
         val movies = listOf(
             TestMovieFactory.createQualifiedMovie(1, true),
-            TestMovieFactory.createQualifiedMovie(2, true)
+            TestMovieFactory.createQualifiedMovie(2, true),
+            TestMovieFactory.createQualifiedMovie(3, true),
+            TestMovieFactory.createQualifiedMovie(4, true),
+            TestMovieFactory.createQualifiedMovie(5, true),
         )
         val viewModel = MoviesViewModel(FakeSuccessPopularUseCase(movies))
 
-        // Act
         viewModel.getAllMovies()
 
-        // Assert
+        advanceUntilIdle()
+
         val state = viewModel.moviesStateFlow.first { !it.isLoading }
-        assertEquals(2, state.movies.size)
-        assertEquals("Test Movie 1", state.movies[0].movie.title)
-        assertEquals("Test Movie 2", state.movies[1].movie.title)
+        assertEquals(5, state.movies.size)
+        state.movies.forEachIndexed { index, qualifiedMovie ->
+            assertEquals("Test Movie ${index + 1}", qualifiedMovie.movie.title)
+        }
     }
 }
 
 object TestMovieFactory {
-
     fun createMovie(id: Int): Movie {
         return Movie(
             id = id,

@@ -9,7 +9,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 
-class GetPopularMoviesUseCaseTest{
+class GetPopularMoviesUseCaseTest {
     private lateinit var repository: MoviesRepository
     private lateinit var useCase: GetPopularMoviesUseCase
 
@@ -17,12 +17,18 @@ class GetPopularMoviesUseCaseTest{
     @Test
     fun `getPopularMovies obtiene Movies y las ordena de forma descendente`() = runTest {
         //Arrange
-        val m1 = Movie(id=1, title="A", "algo", "11/6/2025",
-            "algo", "algo", "PeliculaA","Ingles", 2.5, 8.0     )
-        val m2 = Movie(id=2, title="B", "algo", "11/6/2025",
-            "algo", "algo", "PeliculaB","Ingles", 2.5, 5.0     )
-        val m3 = Movie(id=3, title="C", "algo", "11/6/2025",
-            "algo", "algo", "PeliculaC","Ingles", 2.5, 7.0     )
+        val m1 = Movie(
+            id = 1, title = "A", "algo", "11/6/2025",
+            "algo", "algo", "PeliculaA", "Ingles", 2.5, 8.0
+        )
+        val m2 = Movie(
+            id = 2, title = "B", "algo", "11/6/2025",
+            "algo", "algo", "PeliculaB", "Ingles", 2.5, 5.0
+        )
+        val m3 = Movie(
+            id = 3, title = "C", "algo", "11/6/2025",
+            "algo", "algo", "PeliculaC", "Ingles", 2.5, 7.0
+        )
 
         repository = object : MoviesRepository {
             override suspend fun getPopularMovies(): List<Movie> =
@@ -36,7 +42,7 @@ class GetPopularMoviesUseCaseTest{
         val resultado = useCase.getPopularMovies()
 
         //Assert
-        assertEquals(listOf(1,3,2), resultado.map{it.movie.id} )
+        assertEquals(listOf(1, 3, 2), resultado.map { it.movie.id })
         assertEquals(true, resultado[0].isGoodMovie)
         assertEquals(true, resultado[1].isGoodMovie)
         assertEquals(false, resultado[2].isGoodMovie)

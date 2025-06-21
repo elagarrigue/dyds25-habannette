@@ -16,12 +16,14 @@ class GetMoviesDetailsUseCaseTest {
 
     @BeforeTest
     fun setup() {
-        val m1 = Movie(id=1, title="A", "algo", "11/6/2025",
-            "algo", "algo", "PeliculaA","Ingles", 2.5, 8.0)
-        repository = object: MoviesRepository {
+        val m1 = Movie(
+            id = 1, title = "A", "algo", "11/6/2025",
+            "algo", "algo", "PeliculaA", "Ingles", 2.5, 8.0
+        )
+        repository = object : MoviesRepository {
             override suspend fun getPopularMovies(): List<Movie> = emptyList()
-            override suspend fun getMovieDetails(id:Int): Movie? {
-                if(id==m1.id)
+            override suspend fun getMovieDetails(id: Int): Movie? {
+                if (id == m1.id)
                     return m1
                 else
                     return null

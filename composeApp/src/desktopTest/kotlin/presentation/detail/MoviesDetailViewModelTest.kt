@@ -3,7 +3,8 @@ package presentation.detail
 import edu.dyds.movies.domain.entity.Movie
 import edu.dyds.movies.domain.usecase.GetMoviesDetailsUseCase
 import edu.dyds.movies.presentation.detail.MoviesDetailViewModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.*

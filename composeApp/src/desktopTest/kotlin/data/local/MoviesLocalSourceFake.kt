@@ -5,7 +5,6 @@ class MoviesLocalSourceFake : MoviesLocalSource {
     private val cacheMovies = mutableListOf<Movie>()
 
 
-
     override suspend fun getMovies(): MutableList<Movie> {
         return cacheMovies.toMutableList()
     }

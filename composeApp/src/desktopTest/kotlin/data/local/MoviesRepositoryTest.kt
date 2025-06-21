@@ -2,7 +2,10 @@ import data.local.MoviesExternalSourceFake
 import edu.dyds.movies.data.MovieRepositoryImpl
 import edu.dyds.movies.domain.entity.Movie
 import kotlinx.coroutines.test.runTest
-import kotlin.test.*
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class MoviesRepositoryTest {
 
@@ -18,7 +21,7 @@ class MoviesRepositoryTest {
     @Test
     fun `retorna peliculas del remoto si cache esta vacio y guarda en local`() = runTest {
         val local = MoviesLocalSourceFake()
-        val external = MoviesExternalSourceFake( listOf(movie1, movie2))
+        val external = MoviesExternalSourceFake(listOf(movie1, movie2))
         val repo = MovieRepositoryImpl(local, external)
 
         val result = repo.getPopularMovies()
@@ -41,7 +44,7 @@ class MoviesRepositoryTest {
 
     @Test
     fun `getPopularMovies retorna lista vacia si ocurre un error durante el fetch remoto`() = runTest {
-        val fakeLocal= MoviesLocalSourceFake()
+        val fakeLocal = MoviesLocalSourceFake()
         val fakeExternal = MoviesExternalSourceFake(
             movies = emptyList(),
             exceptionGetMovies = true
@@ -55,7 +58,7 @@ class MoviesRepositoryTest {
 
     @Test
     fun `getMovieDetails retorna pelicula si existe en remoto`() = runTest {
-        val fakeLocal= MoviesLocalSourceFake()
+        val fakeLocal = MoviesLocalSourceFake()
         val external = MoviesExternalSourceFake(
             movieDetailsMap = mapOf(movie1.id to movie1)
         )
@@ -69,7 +72,7 @@ class MoviesRepositoryTest {
 
     @Test
     fun `getMovieDetails retorna null si ocurre error en remoto`() = runTest {
-        val fakeExternal= MoviesExternalSourceFake(
+        val fakeExternal = MoviesExternalSourceFake(
             movieDetailsMap = emptyMap(),
             exceptionGetMovieDetails = true
         )

@@ -2,11 +2,13 @@ package presentation.detail
 
 import edu.dyds.movies.domain.entity.Movie
 import edu.dyds.movies.domain.usecase.GetMoviesDetailsUseCase
+import edu.dyds.movies.presentation.detail.MoviesDetailUiState
 import edu.dyds.movies.presentation.detail.MoviesDetailViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.*
 import org.junit.After
 import org.junit.Assert.*
@@ -49,16 +51,37 @@ class MoviesDetailViewModelTest {
     }
 
     @Test
-    fun `al obtener getMovieDetail exitosamente, el estado contiene la pelicula y no esta cargando`() = runTest {
+    fun `al obtener getMovieDetail exitosamente, se emite loading y luego los datos`() = runTest {
+        // Arrange
         val movie = TestDetailMovieFactory.createMovie(1)
         val viewModel = MoviesDetailViewModel(FakeSuccessMoviesDetailUseCase(movie))
 
-        viewModel.getMovieDetail(1)
+        val events = mutableListOf<MoviesDetailUiState>()
 
+        val collectJob = launch(UnconfinedTestDispatcher(testScheduler)) {
+            viewModel.movieDetailStateFlow.drop(1).collect { state ->
+                events.add(state)
+            }
+        }
+
+        // Act
+        viewModel.getMovieDetail(1)
         advanceUntilIdle()
 
-        val resultState = viewModel.movieDetailStateFlow.first { !it.isLoading }
-        assertEquals(movie, resultState.movie)
+        // Assert
+        assertEquals(2, events.size)
+
+        assertEquals(
+            MoviesDetailUiState(isLoading = true, movie = null),
+            events[0]
+        )
+
+        assertEquals(
+            MoviesDetailUiState(isLoading = false, movie = movie),
+            events[1]
+        )
+
+        collectJob.cancel()
     }
 }
 

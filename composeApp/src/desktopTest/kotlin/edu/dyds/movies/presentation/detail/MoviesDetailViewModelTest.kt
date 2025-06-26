@@ -1,31 +1,31 @@
-package presentation.detail
+package edu.dyds.movies.presentation.detail
 
 import edu.dyds.movies.domain.entity.Movie
 import edu.dyds.movies.domain.usecase.GetMoviesDetailsUseCase
-import edu.dyds.movies.presentation.detail.MoviesDetailUiState
-import edu.dyds.movies.presentation.detail.MoviesDetailViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.*
-import org.junit.After
-import org.junit.Assert.*
-import org.junit.Before
-import org.junit.Test
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNull
+import kotlin.test.assertFalse
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class MoviesDetailViewModelTest {
 
     private val testDispatcher = StandardTestDispatcher()
 
-    @Before
+    @BeforeTest
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
     }
 
-    @After
+    @AfterTest
     fun tearDown() {
         Dispatchers.resetMain()
     }
@@ -70,17 +70,8 @@ class MoviesDetailViewModelTest {
 
         // Assert
         assertEquals(2, events.size)
-
-        assertEquals(
-            MoviesDetailUiState(isLoading = true, movie = null),
-            events[0]
-        )
-
-        assertEquals(
-            MoviesDetailUiState(isLoading = false, movie = movie),
-            events[1]
-        )
-
+        assertEquals(MoviesDetailUiState(isLoading = true, movie = null), events[0])
+        assertEquals(MoviesDetailUiState(isLoading = false, movie = movie), events[1])
         collectJob.cancel()
     }
 }

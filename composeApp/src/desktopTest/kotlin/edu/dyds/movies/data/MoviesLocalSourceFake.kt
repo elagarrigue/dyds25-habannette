@@ -1,4 +1,5 @@
-import edu.dyds.movies.data.local.MoviesLocalSource
+package edu.dyds.movies.data
+
 import edu.dyds.movies.domain.entity.Movie
 
 class MoviesLocalSourceFake : MoviesLocalSource {

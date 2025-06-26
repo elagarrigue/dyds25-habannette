@@ -1,7 +1,5 @@
-package edu.dyds.movies.data_test.local
+package edu.dyds.movies.data
 
-import edu.dyds.movies.data.local.MoviesLocalSource
-import edu.dyds.movies.data.local.MoviesLocalSourceImpl
 import edu.dyds.movies.domain.entity.Movie
 import kotlinx.coroutines.test.runTest
 import kotlin.test.BeforeTest

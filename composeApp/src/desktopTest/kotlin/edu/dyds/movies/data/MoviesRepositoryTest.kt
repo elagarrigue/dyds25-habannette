@@ -1,5 +1,6 @@
-import data.local.MoviesExternalSourceFake
 import edu.dyds.movies.data.MovieRepositoryImpl
+import edu.dyds.movies.data.MoviesLocalSourceFake
+import edu.dyds.movies.data.external.MoviesExternalSourceFake
 import edu.dyds.movies.domain.entity.Movie
 import kotlinx.coroutines.test.runTest
 import kotlin.test.BeforeTest

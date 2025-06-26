@@ -1,6 +1,5 @@
-package data.local
+package edu.dyds.movies.data.external
 
-import edu.dyds.movies.data.external.MoviesExternalSource
 import edu.dyds.movies.domain.entity.Movie
 
 class MoviesExternalSourceFake(
@@ -20,5 +19,3 @@ class MoviesExternalSourceFake(
         return movieDetailsMap[id]
     }
 }
-
-

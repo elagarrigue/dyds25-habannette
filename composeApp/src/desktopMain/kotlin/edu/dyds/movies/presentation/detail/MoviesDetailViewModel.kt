@@ -11,21 +11,21 @@ class MoviesDetailViewModel(
     private val getMoviesDetailsUseCase: GetMoviesDetailsUseCase
 ) : ViewModel() {
 
-    private val movieDetailStateMutableStateFlow = MutableStateFlow(MovieDetailUiState())
+    private val movieDetailStateMutableStateFlow = MutableStateFlow(MoviesDetailUiState())
 
-    val movieDetailStateFlow: Flow<MovieDetailUiState> = movieDetailStateMutableStateFlow
+    val movieDetailStateFlow: Flow<MoviesDetailUiState> = movieDetailStateMutableStateFlow
 
 
     fun getMovieDetail(id: Int) {
         viewModelScope.launch {
             movieDetailStateMutableStateFlow.emit(
-                MovieDetailUiState(isLoading = true)
+                MoviesDetailUiState(isLoading = true)
             )
 
             val movies = getMoviesDetailsUseCase.getMovieDetails(id)
 
             movieDetailStateMutableStateFlow.emit(
-                MovieDetailUiState(
+                MoviesDetailUiState(
                     isLoading = false,
                     movie = movies
                 )

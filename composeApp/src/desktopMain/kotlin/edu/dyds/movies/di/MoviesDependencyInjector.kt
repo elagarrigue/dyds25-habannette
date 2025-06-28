@@ -15,9 +15,9 @@ import edu.dyds.movies.domain.usecase.GetPopularMoviesUseCase
 import edu.dyds.movies.presentation.detail.MoviesDetailViewModel
 import edu.dyds.movies.presentation.home.MoviesViewModel
 import edu.dyds.movies.data.external.MoviesExternalSource
-import edu.dyds.movies.data.local.MoviesLocalSource
+import edu.dyds.movies.data.MoviesLocalSource
 import edu.dyds.movies.data.external.MoviesExternalSourceImpl
-import edu.dyds.movies.data.local.MoviesLocalSourceImpl
+import edu.dyds.movies.data.MoviesLocalSourceImpl
 import edu.dyds.movies.domain.usecase.GetMoviesDetailsUseCaseImpl
 import edu.dyds.movies.domain.usecase.GetPopularMoviesUseCaseImpl
 

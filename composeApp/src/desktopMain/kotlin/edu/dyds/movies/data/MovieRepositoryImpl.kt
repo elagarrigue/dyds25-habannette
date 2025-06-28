@@ -1,7 +1,6 @@
 package edu.dyds.movies.data
 
 import edu.dyds.movies.data.external.MoviesExternalSource
-import edu.dyds.movies.data.local.MoviesLocalSource
 import edu.dyds.movies.domain.entity.Movie
 import edu.dyds.movies.domain.repository.MoviesRepository
 

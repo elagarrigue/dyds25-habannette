@@ -7,26 +7,26 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class OMDBRemoteMovie(
     @SerialName("Title") val title: String,
-    @SerialName("Plot") val overview: String?,
-    @SerialName("Released") val releaseDate: String?,
-    @SerialName("Poster") val poster: String?,
-    @SerialName("imdbRating") val voteAverage: String?,
-    @SerialName("imdbID") val imdbId: String,
-    @SerialName("Language") val originalLanguage: String?,
-    @SerialName("imdbVotes") val popularity: String?
+    @SerialName("Plot") val plot: String,
+    @SerialName("Released") val released: String,
+    @SerialName("Year") val year: String,
+    @SerialName("Poster") val poster: String,
+    @SerialName("Language") val language: String,
+    @SerialName("Metascore") val metaScore: String,
+    val imdbRating: Double,
 ) {
     fun toDomainMovie(): Movie {
         return Movie(
-            id = 0,
+            id = title.hashCode(),
             title = title,
-            overview = overview ?: "",
-            releaseDate = releaseDate ?: "",
-            poster = poster ?: "",
-            backdrop = null,
+            overview = plot,
+            releaseDate = if(released.isNotEmpty() && released != "N/A") released else year,
+            poster = poster,
+            backdrop = poster,
             originalTitle = title,
-            originalLanguage = originalLanguage ?: "",
-            popularity = 0.0,
-            voteAverage = voteAverage?.toDoubleOrNull() ?: 0.0
+            originalLanguage = language,
+            popularity = imdbRating,
+            voteAverage = if(metaScore.isNotEmpty() && metaScore != "N/A") metaScore.toDouble() else 0.0
         )
     }
 }

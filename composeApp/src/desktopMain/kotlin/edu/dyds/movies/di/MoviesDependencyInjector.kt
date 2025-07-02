@@ -21,7 +21,8 @@ import edu.dyds.movies.data.MoviesLocalSourceImpl
 import edu.dyds.movies.domain.usecase.GetMoviesDetailsUseCaseImpl
 import edu.dyds.movies.domain.usecase.GetPopularMoviesUseCaseImpl
 
-private const val API_KEY = "d18da1b5da16397619c688b0263cd281"
+private const val TMDB_API_KEY = "d18da1b5da16397619c688b0263cd281"
+private const val OMDB_API_KEY = "a96e7f78"
 
 object MoviesDependencyInjector {
 
@@ -36,7 +37,26 @@ object MoviesDependencyInjector {
                 url {
                     protocol = URLProtocol.HTTPS
                     host = "api.themoviedb.org"
-                    parameters.append("api_key", API_KEY)
+                    parameters.append("api_key", TMDB_API_KEY)
+                }
+            }
+            install(HttpTimeout) {
+                requestTimeoutMillis = 5000
+            }
+        }
+
+    private val omdbHttpClient =
+        HttpClient {
+            install(ContentNegotiation) {
+                json(Json {
+                    ignoreUnknownKeys = true
+                })
+            }
+            install(DefaultRequest) {
+                url {
+                    protocol = URLProtocol.HTTPS
+                    host = "www.omdbapi.org"
+                    parameters.append("apikey", OMDB_API_KEY)
                 }
             }
             install(HttpTimeout) {

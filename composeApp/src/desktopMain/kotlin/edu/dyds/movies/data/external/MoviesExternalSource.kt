@@ -4,9 +4,4 @@ import edu.dyds.movies.domain.entity.Movie
 
 interface MoviesExternalSource {
     suspend fun getMovies(): List<Movie>
-
-}
-
-interface MovieExternalSource {
-    suspend fun getMovieDetails(title: String): Movie?
 }

@@ -61,12 +61,12 @@ class MoviesRepositoryTest {
     fun `getMovieDetails retorna pelicula si existe en remoto`() = runTest {
         val fakeLocal = MoviesLocalSourceFake()
         val external = MoviesExternalSourceFake(
-            movieDetailsMap = mapOf(movie1.id to movie1)
+            movieDetailsMap = mapOf(movie1.title to movie1)
         )
 
         val repo = MovieRepositoryImpl(fakeLocal, external)
 
-        val result = repo.getMovieDetails(movie1.id)
+        val result = repo.getMovieDetails(movie1.title)
 
         assertEquals(movie1, result)
     }

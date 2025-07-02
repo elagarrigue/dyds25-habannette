@@ -7,7 +7,6 @@ private const val MIN_VOTE_AVERAGE = 6.0
 
 interface GetPopularMoviesUseCase {
     suspend fun getPopularMovies(): List<QualifiedMovie>
-
 }
 
 class GetPopularMoviesUseCaseImpl (

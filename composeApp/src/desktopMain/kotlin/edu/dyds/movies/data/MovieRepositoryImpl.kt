@@ -24,9 +24,9 @@ class MovieRepositoryImpl(
         }
     }
 
-    override suspend fun getMovieDetails(id: Int): Movie? {
+    override suspend fun getMovieDetails(title: String): Movie? {
         return try {
-            moviesExternalSource.getMovieDetails(id)
+            moviesExternalSource.getMovieDetails(title)
         } catch (e: Exception) {
             println("Error al obtener detalles de la pelicula: ${e.message}")
             null

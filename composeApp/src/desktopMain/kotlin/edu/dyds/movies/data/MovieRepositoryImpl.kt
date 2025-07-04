@@ -7,14 +7,15 @@ import edu.dyds.movies.domain.repository.MoviesRepository
 
 class MovieRepositoryImpl(
     private val moviesLocalSource: MoviesLocalSource,
-    private val moviesExternalSource: MoviesExternalSource
+    private val movieExternalBroker: MoviesExternalSource
 ) : MoviesRepository {
 
 
     override suspend fun getPopularMovies(): List<Movie> {
+
         try {
             if (moviesLocalSource.isEmpty()) {
-                val remoteMovies = moviesExternalSource.getMovies()
+                val remoteMovies = movieExternalBroker.getMovies()
                 moviesLocalSource.saveMovies(remoteMovies)
             }
             return moviesLocalSource.getMovies()
@@ -24,9 +25,9 @@ class MovieRepositoryImpl(
         }
     }
 
-    override suspend fun getMovieDetails(id: Int): Movie? {
+    override suspend fun getMovieDetails(title: String): Movie? {
         return try {
-            moviesExternalSource.getMovieDetails(id)
+            movieExternalBroker.getMovieDetails(title)
         } catch (e: Exception) {
             println("Error al obtener detalles de la pelicula: ${e.message}")
             null

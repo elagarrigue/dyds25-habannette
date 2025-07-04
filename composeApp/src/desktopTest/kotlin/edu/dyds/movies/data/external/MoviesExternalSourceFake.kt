@@ -4,7 +4,7 @@ import edu.dyds.movies.domain.entity.Movie
 
 class MoviesExternalSourceFake(
     private val movies: List<Movie> = emptyList(),
-    private val movieDetailsMap: Map<Int, Movie> = emptyMap(),
+    private val movieDetailsMap: Map<String, Movie> = emptyMap(),
     private val exceptionGetMovies: Boolean = false,
     private val exceptionGetMovieDetails: Boolean = false
 ) : MoviesExternalSource {
@@ -14,8 +14,9 @@ class MoviesExternalSourceFake(
         return movies
     }
 
-    override suspend fun getMovieDetails(id: Int): Movie? {
+    override suspend fun getMovieDetails(title: String): Movie? {
         if (exceptionGetMovieDetails) throw RuntimeException("Simulated error")
-        return movieDetailsMap[id]
+        return movieDetailsMap[title]
     }
+
 }

@@ -1,18 +1,18 @@
 package edu.dyds.movies.domain.usecase
 
-import edu.dyds.movies.domain.repository.MoviesRepository
 import edu.dyds.movies.domain.entity.Movie
+import edu.dyds.movies.domain.repository.MoviesRepository
 
 
 interface GetMoviesDetailsUseCase {
-    suspend fun getMovieDetails(id: Int): Movie?
+    suspend fun getMovieDetails(title: String): Movie?
 }
 
-class GetMoviesDetailsUseCaseImpl (
+class GetMoviesDetailsUseCaseImpl(
     private val repository: MoviesRepository
 ) : GetMoviesDetailsUseCase {
 
-    override suspend fun getMovieDetails(id: Int) =
-        repository.getMovieDetails(id)
+    override suspend fun getMovieDetails(title: String) =
+        repository.getMovieDetails(title)
 
 }

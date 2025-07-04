@@ -9,13 +9,13 @@ data class TMDBRemoteMovie(
     val id: Int,
     val title: String,
     val overview: String,
-    @SerialName("release_date") val releaseDate: String?,
-    @SerialName("poster_path") val posterPath: String?,
-    @SerialName("backdrop_path") val backdropPath: String?,
+    @SerialName("release_date") val releaseDate: String? = null,
+    @SerialName("poster_path") val posterPath: String? = null,
+    @SerialName("backdrop_path") val backdropPath: String? = null,
     @SerialName("original_title") val originalTitle: String,
     @SerialName("original_language") val originalLanguage: String,
-    val popularity: Double?,
-    @SerialName("vote_average") val voteAverage: Double?
+    val popularity: Double? = null,
+    @SerialName("vote_average") val voteAverage: Double? = null
 ){
 fun toDomainMovie(): Movie {
     return Movie(

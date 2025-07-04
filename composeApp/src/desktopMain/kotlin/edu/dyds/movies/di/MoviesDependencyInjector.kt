@@ -58,7 +58,7 @@ object MoviesDependencyInjector {
             install(DefaultRequest) {
                 url {
                     protocol = URLProtocol.HTTPS
-                    host = "www.omdbapi.org"
+                    host = "www.omdbapi.com"
                     parameters.append("apikey", OMDB_API_KEY)
                 }
             }

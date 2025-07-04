@@ -28,7 +28,7 @@ class MoviesDetailViewModelTest {
     // Fakes
 
     class FakeSuccessMoviesDetailUseCase(private val movie: Movie) : GetMoviesDetailsUseCase {
-        override suspend fun getMovieDetails(id: Int): Movie = movie
+        override suspend fun getMovieDetails(title: String): Movie = movie
     }
 
     // Tests
@@ -36,7 +36,7 @@ class MoviesDetailViewModelTest {
     @Test
     fun `el estado inicial debe tener pelicula nula y no estar cargando`() {
         val viewModel = MoviesDetailViewModel(
-            FakeSuccessMoviesDetailUseCase(TestDetailMovieFactory.createMovie(1))
+            FakeSuccessMoviesDetailUseCase(TestDetailMovieFactory.createMovie("title 1"))
         )
         val state = viewModel.movieDetailStateFlow
         val initial = (state as MutableStateFlow).value
@@ -48,7 +48,7 @@ class MoviesDetailViewModelTest {
     @Test
     fun `al obtener getMovieDetail exitosamente, se emite loading y luego los datos`() = runTest {
         // Arrange
-        val movie = TestDetailMovieFactory.createMovie(1)
+        val movie = TestDetailMovieFactory.createMovie("title 1")
         val viewModel = MoviesDetailViewModel(FakeSuccessMoviesDetailUseCase(movie))
 
         val events = mutableListOf<MoviesDetailUiState>()
@@ -60,7 +60,7 @@ class MoviesDetailViewModelTest {
         }
 
         // Act
-        viewModel.getMovieDetail(1)
+        viewModel.getMovieDetail("title 1")
         advanceUntilIdle()
 
         // Assert
@@ -72,15 +72,15 @@ class MoviesDetailViewModelTest {
 }
 
 object TestDetailMovieFactory {
-    fun createMovie(id: Int): Movie {
+    fun createMovie(title: String): Movie {
         return Movie(
-            id = id,
-            title = "Test Movie $id",
-            overview = "Test Overview $id",
+            id = title.hashCode(),
+            title = "Test Movie $title",
+            overview = "Test Overview $title",
             releaseDate = "2024-03-10",
-            poster = "test_poster_$id",
+            poster = "test_poster_$title",
             backdrop = null,
-            originalTitle = "Original Test Title $id",
+            originalTitle = "Original Test Title $title",
             originalLanguage = "en",
             popularity = 5.0,
             voteAverage = 5.0

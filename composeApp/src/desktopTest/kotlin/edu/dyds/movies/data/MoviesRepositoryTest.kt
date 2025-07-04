@@ -1,6 +1,6 @@
 import edu.dyds.movies.data.MovieRepositoryImpl
 import edu.dyds.movies.data.local.MoviesLocalSourceFake
-import edu.dyds.movies.data.external.MoviesExternalSourceFake
+import edu.dyds.movies.data.external.MovieExternalBrokerFake
 import edu.dyds.movies.domain.entity.Movie
 import kotlinx.coroutines.test.runTest
 import kotlin.test.BeforeTest
@@ -22,7 +22,7 @@ class MoviesRepositoryTest {
     @Test
     fun `retorna peliculas del remoto si cache esta vacio y guarda en local`() = runTest {
         val local = MoviesLocalSourceFake()
-        val external = MoviesExternalSourceFake(listOf(movie1, movie2))
+        val external = MovieExternalBrokerFake(listOf(movie1, movie2))
         val repo = MovieRepositoryImpl(local, external)
 
         val result = repo.getPopularMovies()
@@ -35,7 +35,7 @@ class MoviesRepositoryTest {
     fun `retorna peliculas del cache si no esta vacio`() = runTest {
         val local = MoviesLocalSourceFake()
         local.saveMovies(listOf(movie1)) // precargar cache
-        val external = MoviesExternalSourceFake(movies = listOf(movie2)) // no debe usarse
+        val external = MovieExternalBrokerFake(tmdbMovies = listOf(movie2)) // no debe usarse
         val repo = MovieRepositoryImpl(local, external)
 
         val result = repo.getPopularMovies()
@@ -46,9 +46,9 @@ class MoviesRepositoryTest {
     @Test
     fun `getPopularMovies retorna lista vacia si ocurre un error durante el fetch remoto`() = runTest {
         val fakeLocal = MoviesLocalSourceFake()
-        val fakeExternal = MoviesExternalSourceFake(
-            movies = emptyList(),
-            exceptionGetMovies = true
+        val fakeExternal = MovieExternalBrokerFake(
+            tmdbMovies = emptyList(),
+            exceptionOnTMDBMovies = true
         )
         val repo = MovieRepositoryImpl(fakeLocal, fakeExternal)
 
@@ -60,8 +60,8 @@ class MoviesRepositoryTest {
     @Test
     fun `getMovieDetails retorna pelicula si existe en remoto`() = runTest {
         val fakeLocal = MoviesLocalSourceFake()
-        val external = MoviesExternalSourceFake(
-            movieDetailsMap = mapOf(movie1.title to movie1)
+        val external = MovieExternalBrokerFake(
+            tmdbDetailsMap = mapOf(movie1.title to movie1)
         )
 
         val repo = MovieRepositoryImpl(fakeLocal, external)
@@ -73,12 +73,12 @@ class MoviesRepositoryTest {
 
     @Test
     fun `getMovieDetails retorna null si ocurre error en remoto`() = runTest {
-        val fakeExternal = MoviesExternalSourceFake(
-            movieDetailsMap = emptyMap(),
-            exceptionGetMovieDetails = true
+        val fakeExternal = MovieExternalBrokerFake(
+            tmdbDetailsMap = emptyMap(),
+            exceptionOnTMDBMovies = true
         )
         val repo = MovieRepositoryImpl(MoviesLocalSourceFake(), fakeExternal)
-        val result = repo.getMovieDetails(0)
+        val result = repo.getMovieDetails("ejemplo")
 
         assertEquals(null, result)
     }

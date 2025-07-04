@@ -16,20 +16,20 @@ data class TMDBRemoteMovie(
     @SerialName("original_language") val originalLanguage: String,
     val popularity: Double? = null,
     @SerialName("vote_average") val voteAverage: Double? = null
-){
-fun toDomainMovie(): Movie {
-    return Movie(
-        id = id,
-        title = title,
-        overview = overview,
-        releaseDate = releaseDate ?:"",
-        poster = posterPath?.let { "https://image.tmdb.org/t/p/w185$it" } ?: "",
-        backdrop = backdropPath?.let { "https://image.tmdb.org/t/p/w780$it" },
-        originalTitle = originalTitle,
-        originalLanguage = originalLanguage,
-        popularity = popularity ?: 0.0,
-        voteAverage = voteAverage ?: 0.0
-    )
-}
+) {
+    fun toDomainMovie(): Movie {
+        return Movie(
+            id = id,
+            title = title,
+            overview = overview,
+            releaseDate = releaseDate ?: "",
+            poster = posterPath?.let { "https://image.tmdb.org/t/p/w185$it" } ?: "",
+            backdrop = backdropPath?.let { "https://image.tmdb.org/t/p/w780$it" },
+            originalTitle = originalTitle,
+            originalLanguage = originalLanguage,
+            popularity = popularity ?: 0.0,
+            voteAverage = voteAverage ?: 0.0
+        )
+    }
 }
 

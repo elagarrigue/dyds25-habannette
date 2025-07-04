@@ -1,4 +1,5 @@
 package edu.dyds.movies.data.external
+
 import edu.dyds.movies.domain.entity.Movie
 
 class MovieExternalBrokerFake(
@@ -37,6 +38,7 @@ class MovieExternalBrokerFake(
                 popularity = (tmdbMovie.popularity + omdbMovie.popularity) / 2.0,
                 voteAverage = (tmdbMovie.voteAverage + omdbMovie.voteAverage) / 2.0
             )
+
             tmdbMovie != null -> tmdbMovie.copy(overview = "TMDB: ${tmdbMovie.overview}")
             omdbMovie != null -> omdbMovie.copy(overview = "OMDB: ${omdbMovie.overview}")
             else -> null

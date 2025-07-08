@@ -11,7 +11,7 @@ class ExternalMovieSourceGetDetailsFake(
     override suspend fun getMovieDetails(title: String): Movie? {
         if (exceptionOnTMDBDetails) {
             if (exceptionOnOMDBDetails) throw RuntimeException("Both sources failed")
-            return omdbDetailsMap[title]?.copy(overview = "OMDB: ${omdbDetailsMap[title]?.overview}")
+            return omdbDetailsMap[title]
         }
 
         val tmdbMovie = tmdbDetailsMap[title]
@@ -30,8 +30,8 @@ class ExternalMovieSourceGetDetailsFake(
                 popularity = (tmdbMovie.popularity + omdbMovie.popularity) / 2.0,
                 voteAverage = (tmdbMovie.voteAverage + omdbMovie.voteAverage) / 2.0
             )
-            tmdbMovie != null -> tmdbMovie.copy(overview = "TMDB: ${tmdbMovie.overview}")
-            omdbMovie != null -> omdbMovie.copy(overview = "OMDB: ${omdbMovie.overview}")
+            tmdbMovie != null -> tmdbMovie
+            omdbMovie != null -> omdbMovie
             else -> null
         }
     }

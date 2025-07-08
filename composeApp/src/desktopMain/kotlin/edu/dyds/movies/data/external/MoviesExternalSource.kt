@@ -10,4 +10,3 @@ interface ExternalMoviesSourceGetDetail {
     suspend fun getMovieDetails(title: String): Movie?
 }
 
-interface MoviesExternalSource : ExternalMoviesSourceGetPopular, ExternalMoviesSourceGetDetail

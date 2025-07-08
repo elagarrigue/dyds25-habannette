@@ -18,10 +18,10 @@ class MovieExternalBrokerTest {
     @Test
     fun `getMovieDetails fusiona detalles de TMDB y OMDB correctamente`() = runTest {
         val tmdbFake = MoviesExternalSourceFake(
-            movieDetailsMap = mapOf("Inception" to movieTMDB)
+            tmdbDetailsMap = mapOf("Inception" to movieTMDB)
         )
         val omdbFake = MoviesExternalSourceFake(
-            movieDetailsMap = mapOf("Inception" to movieOMDB)
+            omdbDetailsMap = mapOf("Inception" to movieOMDB)
         )
 
         val broker = MovieExternalBroker(tmdbFake, omdbFake)
@@ -39,7 +39,7 @@ class MovieExternalBrokerTest {
     fun `getMovieDetails retorna detalle de TMDB si OMDB no responde`() = runTest {
 
         val tmdbFake = MoviesExternalSourceFake(
-            movieDetailsMap = mapOf("Inception" to movieTMDB)
+            tmdbDetailsMap = mapOf("Inception" to movieTMDB)
         )
         val omdbFake = MoviesExternalSourceFake() // OMDB no devuelve nada
 
@@ -54,7 +54,7 @@ class MovieExternalBrokerTest {
 
         val tmdbFake = MoviesExternalSourceFake() // TMDB no devuelve nada
         val omdbFake = MoviesExternalSourceFake(
-            movieDetailsMap = mapOf("Inception" to movieOMDB)
+            omdbDetailsMap = mapOf("Inception" to movieOMDB)
         )
 
         val broker = MovieExternalBroker(tmdbFake, omdbFake)
@@ -78,7 +78,7 @@ class MovieExternalBrokerTest {
     @Test
     fun `getMovies delega correctamente a TMDB`() = runTest {
         val movies = listOf(movieTMDB, movieOMDB)
-        val tmdbFake = MoviesExternalSourceFake(movies = movies)
+        val tmdbFake = MoviesExternalSourceFake(tmdbMovies = movies)
         val omdbFake = MoviesExternalSourceFake() // OMDB no se usa
 
         val broker = MovieExternalBroker(tmdbFake, omdbFake)
@@ -89,10 +89,10 @@ class MovieExternalBrokerTest {
     @Test
     fun `getMovieDetails retorna detalle de OMDB si TMDB lanza excepcion`() = runTest {
         val tmdbFake = MoviesExternalSourceFake(
-            exceptionGetMovieDetails = true
+            exceptionOnTMDBDetails = true
         )
         val omdbFake = MoviesExternalSourceFake(
-            movieDetailsMap = mapOf("Inception" to movieOMDB)
+            omdbDetailsMap = mapOf("Inception" to movieOMDB)
         )
 
         val broker = MovieExternalBroker(tmdbFake, omdbFake)
@@ -103,10 +103,10 @@ class MovieExternalBrokerTest {
     @Test
     fun `getMovieDetails retorna detalle de TMDB si OMDB lanza excepcion`() = runTest {
         val tmdbFake = MoviesExternalSourceFake(
-            movieDetailsMap = mapOf("Inception" to movieTMDB)
+            tmdbDetailsMap = mapOf("Inception" to movieTMDB)
         )
         val omdbFake = MoviesExternalSourceFake(
-            exceptionGetMovieDetails = true
+            exceptionOnOMDBDetails = true
         )
 
         val broker = MovieExternalBroker(tmdbFake, omdbFake)
@@ -116,8 +116,8 @@ class MovieExternalBrokerTest {
     }
     @Test
     fun `getMovieDetails retorna null si ambos servicios lanzan excepcion`() = runTest {
-        val tmdbFake = MoviesExternalSourceFake(exceptionGetMovieDetails = true)
-        val omdbFake = MoviesExternalSourceFake(exceptionGetMovieDetails = true)
+        val tmdbFake = MoviesExternalSourceFake(exceptionOnTMDBDetails = true)
+        val omdbFake = MoviesExternalSourceFake(exceptionOnOMDBDetails = true)
 
         val broker = MovieExternalBroker(tmdbFake, omdbFake)
         val result = broker.getMovieDetails("Inception")
@@ -126,7 +126,7 @@ class MovieExternalBrokerTest {
     }
     @Test
     fun `getMovies retorna lista vacia si TMDB lanza excepcion`() = runTest {
-        val tmdbFake = MoviesExternalSourceFake(exceptionGetMovies = true)
+        val tmdbFake = MoviesExternalSourceFake(exceptionOnTMDBMovies = true)
         val omdbFake = MoviesExternalSourceFake() // OMDB no se usa
 
         val broker = MovieExternalBroker(tmdbFake, omdbFake)

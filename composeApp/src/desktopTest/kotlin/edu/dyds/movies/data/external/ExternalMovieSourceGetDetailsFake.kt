@@ -1,20 +1,12 @@
 package edu.dyds.movies.data.external
-
 import edu.dyds.movies.domain.entity.Movie
 
-class MovieExternalBrokerFake(
-    private val tmdbMovies: List<Movie> = emptyList(),
+class ExternalMovieSourceGetDetailsFake(
     private val tmdbDetailsMap: Map<String, Movie> = emptyMap(),
     private val omdbDetailsMap: Map<String, Movie> = emptyMap(),
-    private val exceptionOnTMDBMovies: Boolean = false,
     private val exceptionOnTMDBDetails: Boolean = false,
     private val exceptionOnOMDBDetails: Boolean = false
-) : MoviesExternalSource {
-
-    override suspend fun getMovies(): List<Movie> {
-        if (exceptionOnTMDBMovies) throw RuntimeException("Simulated TMDB error")
-        return tmdbMovies
-    }
+) : ExternalMoviesSourceGetDetail {
 
     override suspend fun getMovieDetails(title: String): Movie? {
         if (exceptionOnTMDBDetails) {
@@ -38,7 +30,6 @@ class MovieExternalBrokerFake(
                 popularity = (tmdbMovie.popularity + omdbMovie.popularity) / 2.0,
                 voteAverage = (tmdbMovie.voteAverage + omdbMovie.voteAverage) / 2.0
             )
-
             tmdbMovie != null -> tmdbMovie.copy(overview = "TMDB: ${tmdbMovie.overview}")
             omdbMovie != null -> omdbMovie.copy(overview = "OMDB: ${omdbMovie.overview}")
             else -> null

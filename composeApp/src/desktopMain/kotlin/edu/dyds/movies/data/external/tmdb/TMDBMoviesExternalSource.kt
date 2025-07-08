@@ -1,5 +1,7 @@
 package edu.dyds.movies.data.external.tmdb
 
+import edu.dyds.movies.data.external.ExternalMoviesSourceGetDetail
+import edu.dyds.movies.data.external.ExternalMoviesSourceGetPopular
 import edu.dyds.movies.data.external.MoviesExternalSource
 import edu.dyds.movies.domain.entity.Movie
 import io.ktor.client.*
@@ -10,7 +12,7 @@ import kotlinx.serialization.Serializable
 
 class TMDBMoviesExternalSource(
     private val httpClient: HttpClient
-) : MoviesExternalSource {
+) : ExternalMoviesSourceGetPopular,ExternalMoviesSourceGetDetail {
 
     override suspend fun getMovies(): List<Movie> {
         val response: TMDBMovieListResponse = httpClient

@@ -86,4 +86,55 @@ class MovieExternalBrokerTest {
 
         assertEquals(movies, result)
     }
+    @Test
+    fun `getMovieDetails retorna detalle de OMDB si TMDB lanza excepcion`() = runTest {
+        val tmdbFake = MoviesExternalSourceFake(
+            exceptionGetMovieDetails = true
+        )
+        val omdbFake = MoviesExternalSourceFake(
+            movieDetailsMap = mapOf("Inception" to movieOMDB)
+        )
+
+        val broker = MovieExternalBroker(tmdbFake, omdbFake)
+        val result = broker.getMovieDetails("Inception")
+
+        assertEquals(movieOMDB.copy(overview = "OMDB: ${movieOMDB.overview}"), result)
+    }
+    @Test
+    fun `getMovieDetails retorna detalle de TMDB si OMDB lanza excepcion`() = runTest {
+        val tmdbFake = MoviesExternalSourceFake(
+            movieDetailsMap = mapOf("Inception" to movieTMDB)
+        )
+        val omdbFake = MoviesExternalSourceFake(
+            exceptionGetMovieDetails = true
+        )
+
+        val broker = MovieExternalBroker(tmdbFake, omdbFake)
+        val result = broker.getMovieDetails("Inception")
+
+        assertEquals(movieTMDB.copy(overview = "TMDB: ${movieTMDB.overview}"), result)
+    }
+    @Test
+    fun `getMovieDetails retorna null si ambos servicios lanzan excepcion`() = runTest {
+        val tmdbFake = MoviesExternalSourceFake(exceptionGetMovieDetails = true)
+        val omdbFake = MoviesExternalSourceFake(exceptionGetMovieDetails = true)
+
+        val broker = MovieExternalBroker(tmdbFake, omdbFake)
+        val result = broker.getMovieDetails("Inception")
+
+        assertNull(result)
+    }
+    @Test
+    fun `getMovies retorna lista vacia si TMDB lanza excepcion`() = runTest {
+        val tmdbFake = MoviesExternalSourceFake(exceptionGetMovies = true)
+        val omdbFake = MoviesExternalSourceFake() // OMDB no se usa
+
+        val broker = MovieExternalBroker(tmdbFake, omdbFake)
+        val result = broker.getMovies()
+
+        assertTrue(result.isEmpty())
+    }
+
+
+
 }

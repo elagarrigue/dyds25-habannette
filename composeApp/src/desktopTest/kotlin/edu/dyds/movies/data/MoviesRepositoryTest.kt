@@ -78,8 +78,10 @@ class MoviesRepositoryTest {
         val repo = MovieRepositoryImpl(MoviesLocalSourceFake(), ExternalMoviesSourceGetPopularFake(), detailFake)
 
         val result = repo.getMovieDetails(movie1.title)
-
-        assertEquals(movie1,result)
+        val expected = movie1.copy(
+            overview = "TMDB: ${movie1.overview}\n\nOMDB: ${movie1.overview}"
+        )
+        assertEquals(expected,result)
     }
 
     @Test

@@ -28,11 +28,20 @@ class MovieExternalBrokerTest {
 
         val result = broker.getMovieDetails("Inception")!!
 
-        assertEquals("Inception", result.title)
-        assertTrue(result.overview.contains("TMDB: Sci-fi TMDB"))
-        assertTrue(result.overview.contains("OMDB: Thriller OMDB"))
-        assertEquals(8.0, result.voteAverage)
-        assertEquals(8.0, result.popularity)   // Promedio entre 9.0 y 7.0
+        val expected = Movie(
+            id = movieTMDB.id,
+            title = movieTMDB.title,
+            overview = "TMDB: ${movieTMDB.overview}\n\nOMDB: ${movieOMDB.overview}",
+            releaseDate = movieTMDB.releaseDate,
+            poster = movieTMDB.poster,
+            backdrop = movieTMDB.backdrop,
+            originalTitle = movieTMDB.originalTitle,
+            originalLanguage = movieTMDB.originalLanguage,
+            popularity = (movieTMDB.popularity + movieOMDB.popularity) / 2.0,
+            voteAverage = (movieTMDB.voteAverage + movieOMDB.voteAverage) / 2.0
+        )
+
+        assertEquals(expected, result)
     }
 
     @Test

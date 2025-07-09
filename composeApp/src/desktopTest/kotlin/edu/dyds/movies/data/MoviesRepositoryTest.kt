@@ -10,7 +10,6 @@ class MoviesRepositoryTest {
 
     private lateinit var movie1: Movie
     private lateinit var movie2: Movie
-    private lateinit var movieConFormato: Movie
 
     @BeforeTest
     fun setup() {
@@ -58,42 +57,29 @@ class MoviesRepositoryTest {
     }
 
     @Test
-    fun `getMovieDetails retorna pelicula si existe en remoto (solo TMDB)`() = runTest {
+    fun `getMovieDetails retorna pelicula si existe en remoto `() = runTest {
         val detailFake = ExternalMovieSourceGetDetailsFake(
             tmdbDetailsMap = mapOf(movie1.title to movie1)
         )
         val repo = MovieRepositoryImpl(MoviesLocalSourceFake(), ExternalMoviesSourceGetPopularFake(), detailFake)
 
         val result = repo.getMovieDetails(movie1.title)
-        movieConFormato = movie1.copy(overview = "TMDB: ${movie1.overview}")
-        assertEquals(movieConFormato, result)
+        assertEquals(movie1, result)
     }
 
+
+
     @Test
-    fun `getMovieDetails retorna pelicula si existe en remoto (solo OMDB)`() = runTest {
+    fun `getMovieDetails retorna pelicula fusionada si ambos servicios tienen datos`() = runTest {
         val detailFake = ExternalMovieSourceGetDetailsFake(
+            tmdbDetailsMap = mapOf(movie1.title to movie1),
             omdbDetailsMap = mapOf(movie1.title to movie1)
         )
         val repo = MovieRepositoryImpl(MoviesLocalSourceFake(), ExternalMoviesSourceGetPopularFake(), detailFake)
 
         val result = repo.getMovieDetails(movie1.title)
-        movieConFormato = movie1.copy(overview = "OMDB: ${movie1.overview}")
-        assertEquals(movieConFormato, result)
-    }
 
-    @Test
-    fun `getMovieDetails retorna pelicula fusionada si ambos servicios tienen datos`() = runTest {
-        val omdbOverview = "OMDB: ${movie1.overview}"
-        val detailFake = ExternalMovieSourceGetDetailsFake(
-            tmdbDetailsMap = mapOf(movie1.title to movie1),
-            omdbDetailsMap = mapOf(movie1.title to movie1.copy(overview = omdbOverview))
-        )
-        val repo = MovieRepositoryImpl(MoviesLocalSourceFake(), ExternalMoviesSourceGetPopularFake(), detailFake)
-
-        val result = repo.getMovieDetails(movie1.title)
-
-        assertEquals("TMDB: ${movie1.overview}\n\n$omdbOverview", result?.overview)
-        assertEquals(movie1.title, result?.title)
+        assertEquals(movie1,result)
     }
 
     @Test
@@ -139,9 +125,8 @@ class MoviesRepositoryTest {
         val repo = MovieRepositoryImpl(MoviesLocalSourceFake(), ExternalMoviesSourceGetPopularFake(), detailFake)
 
         val result = repo.getMovieDetails(movie1.title)
-        val esperado = movie1.copy(overview = "OMDB: ${movie1.overview}")
 
-        assertEquals(esperado, result)
+        assertEquals(movie1, result)
     }
 
     @Test

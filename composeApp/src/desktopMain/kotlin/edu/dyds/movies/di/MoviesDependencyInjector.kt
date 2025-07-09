@@ -5,10 +5,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import edu.dyds.movies.data.MovieRepositoryImpl
 import edu.dyds.movies.data.MoviesLocalSource
 import edu.dyds.movies.data.MoviesLocalSourceImpl
-import edu.dyds.movies.data.external.ExternalMoviesSourceGetDetail
-import edu.dyds.movies.data.external.ExternalMoviesSourceGetPopular
 import edu.dyds.movies.data.external.MovieExternalBroker
-import edu.dyds.movies.data.external.MoviesExternalSource
 import edu.dyds.movies.data.external.omdb.OMDBMoviesExternalSource
 import edu.dyds.movies.data.external.tmdb.TMDBMoviesExternalSource
 import edu.dyds.movies.domain.repository.MoviesRepository

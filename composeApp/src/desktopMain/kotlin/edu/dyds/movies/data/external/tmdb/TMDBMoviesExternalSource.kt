@@ -2,7 +2,6 @@ package edu.dyds.movies.data.external.tmdb
 
 import edu.dyds.movies.data.external.ExternalMoviesSourceGetDetail
 import edu.dyds.movies.data.external.ExternalMoviesSourceGetPopular
-import edu.dyds.movies.data.external.MoviesExternalSource
 import edu.dyds.movies.domain.entity.Movie
 import io.ktor.client.*
 import io.ktor.client.call.*

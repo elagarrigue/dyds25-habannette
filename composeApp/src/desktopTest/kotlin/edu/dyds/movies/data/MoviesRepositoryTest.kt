@@ -21,7 +21,7 @@ class MoviesRepositoryTest {
     fun `retorna peliculas del remoto si cache esta vacio y guarda en local`() = runTest {
         val local = MoviesLocalSourceFake()
         val popularFake = ExternalMoviesSourceGetPopularFake(movies = listOf(movie1, movie2))
-        val detailFake = ExternalMovieSourceGetDetailsFake()
+        val detailFake = ExternalMovieSourceGetDetailsFake(null)
         val repo = MovieRepositoryImpl(local, popularFake, detailFake)
 
         val result = repo.getPopularMovies()
@@ -35,8 +35,8 @@ class MoviesRepositoryTest {
         val local = MoviesLocalSourceFake().apply {
             saveMovies(listOf(movie1))
         }
-        val popularFake = ExternalMoviesSourceGetPopularFake(movies = listOf(movie2)) // no debe usarse
-        val detailFake = ExternalMovieSourceGetDetailsFake()
+        val popularFake = ExternalMoviesSourceGetPopularFake(movies = listOf(movie2))
+        val detailFake = ExternalMovieSourceGetDetailsFake(null)
         val repo = MovieRepositoryImpl(local, popularFake, detailFake)
 
         val result = repo.getPopularMovies()
@@ -47,8 +47,8 @@ class MoviesRepositoryTest {
     @Test
     fun `getPopularMovies retorna lista vacia si ocurre un error durante el fetch remoto`() = runTest {
         val local = MoviesLocalSourceFake()
-        val popularFake = ExternalMoviesSourceGetPopularFake(shouldThrow = true)
-        val detailFake = ExternalMovieSourceGetDetailsFake()
+        val popularFake = ExternalMoviesSourceGetPopularFake(exceptionGetMovies = true)
+        val detailFake = ExternalMovieSourceGetDetailsFake(null)
         val repo = MovieRepositoryImpl(local, popularFake, detailFake)
 
         val result = repo.getPopularMovies()
@@ -59,7 +59,7 @@ class MoviesRepositoryTest {
     @Test
     fun `getMovieDetails retorna pelicula si existe en remoto `() = runTest {
         val detailFake = ExternalMovieSourceGetDetailsFake(
-            tmdbDetailsMap = mapOf(movie1.title to movie1)
+            movie=movie1
         )
         val repo = MovieRepositoryImpl(MoviesLocalSourceFake(), ExternalMoviesSourceGetPopularFake(), detailFake)
 
@@ -68,74 +68,11 @@ class MoviesRepositoryTest {
     }
 
 
-
     @Test
-    fun `getMovieDetails retorna pelicula fusionada si ambos servicios tienen datos`() = runTest {
+    fun `getMovieDetails retorna null si remote lanza excepcion`() = runTest {
         val detailFake = ExternalMovieSourceGetDetailsFake(
-            tmdbDetailsMap = mapOf(movie1.title to movie1),
-            omdbDetailsMap = mapOf(movie1.title to movie1)
-        )
-        val repo = MovieRepositoryImpl(MoviesLocalSourceFake(), ExternalMoviesSourceGetPopularFake(), detailFake)
-
-        val result = repo.getMovieDetails(movie1.title)
-        val expected = movie1.copy(
-            overview = "TMDB: ${movie1.overview}\n\nOMDB: ${movie1.overview}"
-        )
-        assertEquals(expected,result)
-    }
-
-    @Test
-    fun `getMovieDetails retorna null si ambos servicios no tienen datos`() = runTest {
-        val detailFake = ExternalMovieSourceGetDetailsFake()
-        val repo = MovieRepositoryImpl(MoviesLocalSourceFake(), ExternalMoviesSourceGetPopularFake(), detailFake)
-
-        val result = repo.getMovieDetails(movie1.title)
-
-        assertNull(result)
-    }
-
-    @Test
-    fun `getMovieDetails retorna null si ocurre un error en el fetch remoto TMDB`() = runTest {
-        val detailFake = ExternalMovieSourceGetDetailsFake(
-            exceptionOnTMDBDetails = true
-        )
-        val repo = MovieRepositoryImpl(MoviesLocalSourceFake(), ExternalMoviesSourceGetPopularFake(), detailFake)
-
-        val result = repo.getMovieDetails(movie1.title)
-
-        assertNull(result)
-    }
-
-    @Test
-    fun `getMovieDetails retorna null si ocurre un error en el fetch remoto OMDB`() = runTest {
-        val detailFake = ExternalMovieSourceGetDetailsFake(
-            exceptionOnOMDBDetails = true
-        )
-        val repo = MovieRepositoryImpl(MoviesLocalSourceFake(), ExternalMoviesSourceGetPopularFake(), detailFake)
-
-        val result = repo.getMovieDetails(movie1.title)
-
-        assertNull(result)
-    }
-
-    @Test
-    fun `getMovieDetails retorna detalle de OMDB si TMDB lanza excepcion`() = runTest {
-        val detailFake = ExternalMovieSourceGetDetailsFake(
-            exceptionOnTMDBDetails = true,
-            omdbDetailsMap = mapOf(movie1.title to movie1)
-        )
-        val repo = MovieRepositoryImpl(MoviesLocalSourceFake(), ExternalMoviesSourceGetPopularFake(), detailFake)
-
-        val result = repo.getMovieDetails(movie1.title)
-
-        assertEquals(movie1, result)
-    }
-
-    @Test
-    fun `getMovieDetails retorna null si ambos servicios lanzan excepcion`() = runTest {
-        val detailFake = ExternalMovieSourceGetDetailsFake(
-            exceptionOnTMDBDetails = true,
-            exceptionOnOMDBDetails = true
+            movie=null,
+            exceptionDetails = true,
         )
         val repo = MovieRepositoryImpl(MoviesLocalSourceFake(), ExternalMoviesSourceGetPopularFake(), detailFake)
 

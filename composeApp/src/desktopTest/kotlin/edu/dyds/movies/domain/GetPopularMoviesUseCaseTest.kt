@@ -34,7 +34,7 @@ class GetPopularMoviesUseCaseTest {
             override suspend fun getPopularMovies(): List<Movie> =
                 listOf(m1, m2, m3)
 
-            override suspend fun getMovieDetails(id: Int): Movie? = null
+            override suspend fun getMovieDetails(title: String): Movie? = null
         }
         useCase = GetPopularMoviesUseCaseImpl(repository)
 
@@ -53,7 +53,7 @@ class GetPopularMoviesUseCaseTest {
     fun `getPopularMovies con lista vacia retorna vacio`() = runTest {
         repository = object : MoviesRepository {
             override suspend fun getPopularMovies(): List<Movie> = emptyList()
-            override suspend fun getMovieDetails(id: Int): Movie? = null
+            override suspend fun getMovieDetails(title: String): Movie? = null
         }
         useCase = GetPopularMoviesUseCaseImpl(repository)
 

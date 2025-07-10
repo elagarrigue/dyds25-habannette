@@ -1,12 +1,10 @@
 import edu.dyds.movies.data.MovieRepositoryImpl
+import edu.dyds.movies.data.external.ExternalMovieSourceGetDetailsFake
+import edu.dyds.movies.data.external.ExternalMoviesSourceGetPopularFake
 import edu.dyds.movies.data.local.MoviesLocalSourceFake
-import edu.dyds.movies.data.external.MoviesExternalSourceFake
 import edu.dyds.movies.domain.entity.Movie
 import kotlinx.coroutines.test.runTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 class MoviesRepositoryTest {
 
@@ -22,8 +20,9 @@ class MoviesRepositoryTest {
     @Test
     fun `retorna peliculas del remoto si cache esta vacio y guarda en local`() = runTest {
         val local = MoviesLocalSourceFake()
-        val external = MoviesExternalSourceFake(listOf(movie1, movie2))
-        val repo = MovieRepositoryImpl(local, external)
+        val popularFake = ExternalMoviesSourceGetPopularFake(movies = listOf(movie1, movie2))
+        val detailFake = ExternalMovieSourceGetDetailsFake(null)
+        val repo = MovieRepositoryImpl(local, popularFake, detailFake)
 
         val result = repo.getPopularMovies()
 
@@ -33,10 +32,12 @@ class MoviesRepositoryTest {
 
     @Test
     fun `retorna peliculas del cache si no esta vacio`() = runTest {
-        val local = MoviesLocalSourceFake()
-        local.saveMovies(listOf(movie1)) // precargar cache
-        val external = MoviesExternalSourceFake(movies = listOf(movie2)) // no debe usarse
-        val repo = MovieRepositoryImpl(local, external)
+        val local = MoviesLocalSourceFake().apply {
+            saveMovies(listOf(movie1))
+        }
+        val popularFake = ExternalMoviesSourceGetPopularFake(movies = listOf(movie2))
+        val detailFake = ExternalMovieSourceGetDetailsFake(null)
+        val repo = MovieRepositoryImpl(local, popularFake, detailFake)
 
         val result = repo.getPopularMovies()
 
@@ -45,12 +46,10 @@ class MoviesRepositoryTest {
 
     @Test
     fun `getPopularMovies retorna lista vacia si ocurre un error durante el fetch remoto`() = runTest {
-        val fakeLocal = MoviesLocalSourceFake()
-        val fakeExternal = MoviesExternalSourceFake(
-            movies = emptyList(),
-            exceptionGetMovies = true
-        )
-        val repo = MovieRepositoryImpl(fakeLocal, fakeExternal)
+        val local = MoviesLocalSourceFake()
+        val popularFake = ExternalMoviesSourceGetPopularFake(exceptionGetMovies = true)
+        val detailFake = ExternalMovieSourceGetDetailsFake(null)
+        val repo = MovieRepositoryImpl(local, popularFake, detailFake)
 
         val result = repo.getPopularMovies()
 
@@ -58,28 +57,27 @@ class MoviesRepositoryTest {
     }
 
     @Test
-    fun `getMovieDetails retorna pelicula si existe en remoto`() = runTest {
-        val fakeLocal = MoviesLocalSourceFake()
-        val external = MoviesExternalSourceFake(
-            movieDetailsMap = mapOf(movie1.id to movie1)
+    fun `getMovieDetails retorna pelicula si existe en remoto `() = runTest {
+        val detailFake = ExternalMovieSourceGetDetailsFake(
+            movie=movie1
         )
+        val repo = MovieRepositoryImpl(MoviesLocalSourceFake(), ExternalMoviesSourceGetPopularFake(), detailFake)
 
-        val repo = MovieRepositoryImpl(fakeLocal, external)
-
-        val result = repo.getMovieDetails(movie1.id)
-
+        val result = repo.getMovieDetails(movie1.title)
         assertEquals(movie1, result)
     }
 
-    @Test
-    fun `getMovieDetails retorna null si ocurre error en remoto`() = runTest {
-        val fakeExternal = MoviesExternalSourceFake(
-            movieDetailsMap = emptyMap(),
-            exceptionGetMovieDetails = true
-        )
-        val repo = MovieRepositoryImpl(MoviesLocalSourceFake(), fakeExternal)
-        val result = repo.getMovieDetails(0)
 
-        assertEquals(null, result)
+    @Test
+    fun `getMovieDetails retorna null si remote lanza excepcion`() = runTest {
+        val detailFake = ExternalMovieSourceGetDetailsFake(
+            movie=null,
+            exceptionDetails = true,
+        )
+        val repo = MovieRepositoryImpl(MoviesLocalSourceFake(), ExternalMoviesSourceGetPopularFake(), detailFake)
+
+        val result = repo.getMovieDetails(movie1.title)
+
+        assertNull(result)
     }
 }
